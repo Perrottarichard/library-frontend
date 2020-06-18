@@ -4,9 +4,7 @@ const Books = (props) => {
   if (!props.show) {
     return null
   }
-
-  const books = []
-
+  const { books } = props
   return (
     <div>
       <h2>books</h2>
