@@ -14,7 +14,6 @@ const Authors = (props) => {
   const { authors } = props
   const options = []
   authors.map(a => options.push(Object.create({ value: a.name, label: a.name })))
-  console.log(options)
 
   const handleChange = selectedOption => {
     setSelectedOption(selectedOption)
@@ -27,6 +26,7 @@ const Authors = (props) => {
     setSelectedOption('')
     setBorn('')
   }
+
   return (
     <div>
       <h2>authors</h2>
