@@ -1,34 +1,43 @@
 
 import React, { useState } from 'react'
-import { useQuery } from '@apollo/client'
+import { useQuery, useApolloClient } from '@apollo/client'
 import Login from './components/Login'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { ALL_AUTHORS, ALL_BOOKS } from './queries'
+import Notifications from './components/Notifications'
 
 
 const App = () => {
-
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [token, setToken] = useState(window.localStorage.getItem('library-user-token'))
+  const client = useApolloClient()
+  const [page, setPage] = useState('authors')
+  const [notification, setNotification] = useState('')
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
 
-
-  const [page, setPage] = useState('authors')
-
-
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
+  }
   if (books.loading) {
     return <div>loading...</div>
   }
   if (authors.loading) {
     return <div>loading...</div>
   }
-  if (!loggedIn) {
+  if (token === null) {
     return <div>
+      <Notifications
+        notification={notification}
+        setNotification={setNotification} />
       <Login
-        loggedIn={loggedIn}
-        setLoggedIn={setLoggedIn}
+        token={token}
+        setToken={setToken}
+        notification={notification}
+        setNotification={setNotification}
       />
     </div>
   }
@@ -38,7 +47,11 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => logout()}>logout</button>
       </div>
+      <Notifications
+        notification={notification}
+        setNotification={setNotification} />
 
       <Authors
         show={page === 'authors'}
@@ -54,6 +67,7 @@ const App = () => {
         show={page === 'add'}
         authors={authors.data.allAuthors}
         books={books.data.allBooks}
+        setNotification={setNotification}
       />
 
     </div>

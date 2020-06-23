@@ -58,6 +58,7 @@ export const ADD_AUTHOR = gql`
 mutation authorToAdd($name: String!) {
     addAuthor(name: $name) {
         name
+        id
     }
 }`
 export const HAS_AUTHOR = gql`
