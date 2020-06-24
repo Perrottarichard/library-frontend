@@ -7,6 +7,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { ALL_AUTHORS, ALL_BOOKS } from './queries'
 import Notifications from './components/Notifications'
+import Recommendation from './components/Recommendation'
 
 
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('recommend')}>recommendations</button>
         <button onClick={() => logout()}>logout</button>
       </div>
       <Notifications
@@ -57,7 +59,8 @@ const App = () => {
         show={page === 'authors'}
         authors={authors.data.allAuthors}
       />
-
+      <Recommendation
+        show={page === 'recommend'} />
       <Books
         show={page === 'books'}
         books={books.data.allBooks}
