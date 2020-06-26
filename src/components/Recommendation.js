@@ -26,7 +26,6 @@ const Recommendation = (props) => {
             getThem(recommended)
         }
     }, [recBooks, recommended])
-    console.log(result)
     if (result.data && props.show) {
         return (
             <div>

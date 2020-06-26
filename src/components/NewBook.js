@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
-import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ADD_AUTHOR } from '../queries'
+import { ADD_BOOK, ALL_AUTHORS, ADD_AUTHOR } from '../queries'
 
 const NewBook = (props) => {
-  const { authors, setNotification } = props
+  const { authors, setNotification, updateCacheWith } = props
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
-  const [createBook] = useMutation(ADD_BOOK, { refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }] })
+  const [createBook] = useMutation(ADD_BOOK, {
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook)
+    }
+  },
+    { refetchQueries: [{ query: ALL_AUTHORS }] })
+
   const [createAuthor, result] = useMutation(ADD_AUTHOR, {
     onError: (error) => {
       setNotification(error.graphQLErrors[0].message)
@@ -29,7 +35,7 @@ const NewBook = (props) => {
       })
     }
   },
-    { refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }] })
+    { refetchQueries: [{ query: ALL_AUTHORS }] })
 
   useEffect(() => {
     if (result.data) {
